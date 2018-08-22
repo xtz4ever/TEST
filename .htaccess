@@ -1,0 +1,52 @@
+RewriteEngine on
+RewriteBase /
+
+
+
+
+
+
+
+# убираем слэш в конце адреса
+RewriteCond %{REQUEST_URI} .+/$ [NC]
+RewriteRule ^(.+)(/)$ $1 [L,R=301]
+
+
+RewriteCond %{THE_REQUEST} ^GET.*index\.php [NC]
+RewriteRule (.*?)index\.php/*(.*) /$1$2 [R=301,L]
+
+#RewriteCond %{SERVER_PORT} !^443$asdasd
+#RewriteRule .* https://%{SERVER_NAME}%{REQUEST_URI} [R,L]
+
+# if request begins with /admin remove admin and ad /backend/web/
+RewriteCond %{REQUEST_URI} ^/pinchuk
+RewriteRule ^pinchuk/?(.*) /backend/web/$1
+
+
+
+
+#RewriteCond %{REQUEST_URI} ^/backend/web/$1
+#RewriteRule ^ - [R=404,L]
+# other requests add /frontend/web/$1
+RewriteCond %{REQUEST_URI} !^/(frontend/web|backend/web|pinchuk)
+RewriteRule (.*) /frontend/web/$1
+
+# if frontend request
+RewriteCond %{REQUEST_URI} ^/frontend/web
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule . /frontend/web/index.php
+
+# if backend request
+RewriteCond %{REQUEST_URI} ^/backend/web
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule . /backend/web/index.php
+
+
+
+
+
+
+
+php_value max_execution_time 500
